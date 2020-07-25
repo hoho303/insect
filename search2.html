@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/ef250e757f.js"></script>
+    <title>Nhận diện côn trùng gây hại</title>
+</head>
+
+<style>
+    .row.thongtin b {
+        margin-right: 10px;
+    }
+    .row.thongtin label{
+        margin-right: 10px;
+    }
+    input.form-control.linkImage {
+        border-radius: 5px;
+    }
+    button.btnNhanDien {
+        border-radius: 0px 4px 4px 0px;
+    }
+    .col-sm-12.col-md-12.col-lg-12.col-xl-12.imageInsect {
+        text-align: center;
+    }
+    img#image-insect {
+        max-width: 100%;
+        max-height: 70vh;
+        margin-top: 10px;
+    }
+</style>
+<body>
+    <div class="container">
+        <div class="row thongtin">
+            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <b>Dán link hoặc Upload Ảnh</b>
+                <label class="radio-inline"><input id="upload-link" type="radio" name="optradio" checked>Dán link</label>
+                <label class="radio-inline"><input id="upload-file" type="radio" name="optradio">Upload Ảnh</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" id="detect">
+                <div id="detect-link" class="input-group form-group">
+                    <input id="input-link" type="text" class="form-control linkImage">
+                    <div class="input-group-btn">
+                            <button type="button" id="nhan-dien-url" class="btn btn-primary btnNhanDien" style="height:38px;" value="">
+                                <span id="text_link">Nhận diện 
+                                    <i class="fa fa-arrow-circle-right">
+                                    </i>
+                                </span>
+                            </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 imageInsect">
+                <img id='image-insect' src="http://placehold.it/600x300?text=Insect" alt="Insect Image">
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    $(function() {
+        $('#upload-link').change(function(){
+            $('#image-insect').attr('src', 'http://placehold.it/600x300?text=Insect');
+            $('#form-nhan-dien').remove();
+            $('#detect').append('<div id="detect-link" class="input-group form-group">'+
+                        '<input id="input-link" type="text" class="form-control linkImage">'+
+                        '<div class="input-group-btn">'+
+                            '<button type="button" id="nhan-dien-url" class="btn btn-primary btnNhanDien" style="height:38px;" value="">'+
+                                '<span id="text_link">Nhận diện '+
+                                    '<i class="fa fa-arrow-circle-right">'+
+                                    '</i>'+
+                                '</span>'+
+                            '</button>'+
+                    '</div>'+
+                    '</div>');
+                     $('#nhan-dien-url').click(sendLink);
+                     $('#input-link').keyup(function(){
+                        $('#image-insect').attr('src', 'http://placehold.it/600x300?text=Insect');
+                        if(checkURL($('#input-link').val(),2000))
+                        {
+                            $('#image-insect').attr('src', $('#input-link').val());
+                        }
+                     });
+        });
+        $('#upload-file').change(function(){
+            $('#image-insect').attr('src', 'http://placehold.it/600x300?text=Insect');
+            $('#detect-link').remove();
+            $('#detect').append('<form id="form-nhan-dien" class="input-group form-group" method="POST" enctype="multipart/form-data">'+
+                    '<input type="file" id="imgInp" name ="file" style ="height: 45px" class="form-control linkImage">'+
+                            '<button type="button" id="nhan-dien-file" class="btn btn-primary btnNhanDien" style="height:45px;" value="">'+
+                                '<span id="text_link">Nhận diện '+
+                                    '<i class="fa fa-arrow-circle-right">'+
+                                    '</i>'+
+                               '</span>'+
+                            '</button>'+
+                '</form>');
+                $('#nhan-dien-file').click(sendFile);
+                $("#imgInp").change(function() {
+                    readData(this);
+                });
+        });
+        $('#nhan-dien-url').click(sendLink);
+        $('#nhan-dien-file').click(sendFile);
+        $('#input-link').keyup(function(){
+            $('#image-insect').attr('src', 'http://placehold.it/600x300?text=Insect');
+            if(checkURL($('#input-link').val()))
+            {
+               $('#image-insect').attr('src', $('#input-link').val());
+            }
+        });
+    });
+function sendFile() {
+    var form_data = new FormData($('#form-nhan-dien')[0]);
+    $.ajax({
+        type: 'POST',
+        url: '/uploadFileByImage',
+        data: form_data,
+        contentType: false,
+        cache: false,
+        processData: false,
+        success: function(data) {
+            alert(data);
+        },
+    });
+}
+function sendLink() {
+    if(checkURL($('#input-link').val(),2000))
+    {
+        link = $('#input-link').val();
+        $.ajax({
+            type: 'GET',
+            url: '/uploadFileByUrl?url='+link,
+            cache: false,
+            processData: false,
+            success: function(data) {
+                alert(data);
+            },
+        });
+    }
+    else
+    {
+        alert('Thí chủ có link không ?');
+    }
+}
+function readData(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      $('#image-insect').attr('src', e.target.result);
+    }
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+function checkURL(url) {
+    return(url.match(/\.(jpeg|jpg|gif|png)/) != null);
+}
+function testImage(url, timeoutT) {
+    return new Promise(function (resolve, reject) {
+        var timeout = timeoutT || 5000;
+        var timer, img = new Image();
+        img.onerror = img.onabort = function () {
+            clearTimeout(timer);
+            reject("error");
+        };
+        img.onload = function () {
+            clearTimeout(timer);
+            resolve("success");
+        };
+        timer = setTimeout(function () {
+            // reset .src to invalid URL so it stops previous
+            // loading, but doesn't trigger new load
+            img.src = "//!!!!/test.jpg";
+            reject("timeout");
+        }, timeout);
+        img.src = url;
+    });
+}
+</script>
+</html>
