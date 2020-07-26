@@ -77,6 +77,9 @@ def return_files_tut():
 	except Exception as e:
 		return str(e)
 
+@app.route('/download', methods=['GET', 'POST'])
+def download():
+    return send_file('insect.apk', attachment_filename='insect.apk')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port="5000")
