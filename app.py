@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, send_file
+from flask import Flask, request, render_template, send_file, abort, redirect, url_for
 import io
 from PIL import Image
 import requests
@@ -8,6 +8,8 @@ from tensorflow.python.keras.preprocessing.image import img_to_array
 from tensorflow.python.keras.preprocessing.image import load_img
 import os
 import numpy as np
+import sqlite3
+from sqlite3 import Error
 
 app = Flask(__name__, template_folder='',static_folder="")
 model = load_model('insect2.h5')
@@ -26,6 +28,45 @@ def loadImage(imageInsect):
     image = image / 255
     return image
 
+
+def create_connection(db_file):
+    """ create a database connection to the SQLite database
+        specified by db_file
+    :param db_file: database file
+    :return: Connection object or None
+    """
+    conn = None
+    try:
+        conn = sqlite3.connect(db_file)
+        return conn
+    except Error as e:
+        print(e)
+
+    return conn
+
+def select_insect_by_id(conn, id):
+    """
+    Query tasks by priority
+    :param conn: the Connection object
+    :param priority:
+    :return:
+    """
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM insect WHERE id=?", (id,))
+
+    rows = cur.fetchall()
+    if(len(rows)>0): return rows[0]
+    return []
+
+
+@app.route('/insect/<int:id>')
+def show_insect(id):
+    conn = create_connection(r"insect.sqlite")
+    with conn:
+        print("1. Query insect by id:")
+        insect = select_insect_by_id(conn, id+1)
+    if(len(insect)>0): return render_template('detail.html', data=insect)
+    return "Côn trùng không có trong cơ sở dữ liệu"
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -48,8 +89,8 @@ def upload_file_by_url():
     pred = np.argmax(predicts)
     if predicts[0][pred] > 0.7:
         os.remove(filename)
-        return labels[pred]
-    return "Con này không co"
+        return url_for('show_insect', id=pred)
+    return url_for('show_insect', id=100)
 
 
 @app.route('/uploadFileByImage', methods=['GET', 'POST'])
@@ -64,7 +105,23 @@ def upload_file_by_image():
             pred = np.argmax(predicts)
             if predicts[0][pred] > 0.7:
                 return str(pred)
-            return "Con này không co"
+            return -1
+        except:
+            return "Thí chủ có File không ?"
+
+@app.route('/uploadFileByImageWeb', methods=['GET', 'POST'])
+def upload_file_by_image_web():
+    if request.method == 'POST':
+        try:
+            image = request.files["file"].read()
+            image = Image.open(io.BytesIO(image))
+            image = loadImage(image)
+            predicts = model.predict(image)
+            print(predicts)
+            pred = np.argmax(predicts)
+            if predicts[0][pred] > 0.7:
+                return url_for('show_insect', id=pred)
+            return url_for('show_insect', id=100)
         except:
             return "Thí chủ có File không ?"
 

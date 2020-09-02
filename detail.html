@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/popper.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="/css/2.css">
+  <link rel="stylesheet" href="/css/all.css">
+  <link rel="stylesheet" href="/css/detail.css">
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <title>Thông tin côn trùng</title>
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+  <style>
+    .iconheader {
+      font-size: 25px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <div class="pos-f-t">
+      <div class="collapse" id="navbarToggleExternalContent">
+        <div class="bg-dark p-4">
+          <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+              <a class="nav-link" href="/"> <i class="fas fa-home ic_menu"></i>Trang chủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/detect"><i class="fas fa-search ic_menu"></i>Nhận diện côn trùng</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/download"><i class="fas fa-download ic_menu"></i>Tải xuống phần mềm</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <nav class="navbar navbar-dark bg-header">
+      <div class="container">
+        <div class="row">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent"
+            aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+          <img src="/image/logotrian.png" alt="Image">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <div class="iconheader float-right">
+            <ul>
+              <li><a href="/"><i class="fas fa-home"></i></li></a>
+              <li><a href="/detect"><i class="fas fa-search"></i></a></li>
+              <li><a href="/download"><i class="fas fa-download"></i></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="card">
+      <div class="container-fliud">
+        <div class="wrapper row">
+          <div class="preview col-md-6">
+
+            <div class="preview-pic tab-content">
+              <div class="tab-pane active" id="pic-1"><img src="/image/{{data[0]}}/1.jpg" /></div>
+              <div class="tab-pane" id="pic-2"><img src="/image/{{data[0]}}/2.jpg" /></div>
+              <div class="tab-pane" id="pic-3"><img src="/image/{{data[0]}}/2.jpg" /></div>
+              <div class="tab-pane" id="pic-4"><img src="/image/{{data[0]}}/1.jpg" /></div>
+              <div class="tab-pane" id="pic-5"><img src="/image/{{data[0]}}/2.jpg" /></div>
+            </div>
+            <ul class="preview-thumbnail nav nav-tabs">
+              <li class="active"><a data-target="#pic-1" data-toggle="tab"><img src="/image/{{data[0]}}/1.jpg" /></a>
+              </li>
+              <li><a data-target="#pic-2" data-toggle="tab"><img src="/image/{{data[0]}}/2.jpg" /></a></li>
+              <li><a data-target="#pic-3" data-toggle="tab"><img src="/image/{{data[0]}}/3.jpg" /></a></li>
+              <li><a data-target="#pic-4" data-toggle="tab"><img src="/image/{{data[0]}}/1.jpg" /></a></li>
+              <li><a data-target="#pic-5" data-toggle="tab"><img src="/image/{{data[0]}}/2.jpg" /></a></li>
+            </ul>
+
+          </div>
+          <div class="details col-md-6">
+            <h3 class="product-title">{{data[1]}}</h3>
+            <div class="rating">
+              <span class="review-no">Cây trồng bị ảnh hưởng:</span>
+              <span>{{data[7]}}</span>
+            </div>
+            <div class="rating">
+              <span class="dac-diem">Đặc điểm:</span>
+              <span>{{data[5]}}</span>
+            </div>
+            <div class="rating">
+              <span class="dia-ban">Địa bàn hoạt động:</span>
+              <span>{{data[6]}}</span>
+            </div>
+            <div class="rating">
+              <span class="tac-hai">Tác hại:</span>
+              <span>{{data[8]}}</span>
+            </div>
+            <div class="rating">
+              <span class="phong-ngua">Cách phòng ngừa:</span>
+              <span>{{data[9]}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

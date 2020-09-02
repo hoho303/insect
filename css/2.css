@@ -363,6 +363,7 @@ span.fas.fa-chevron-right {
   width: 165px;
   height: 300px;
 }
+
 .col-md-6{
   display: inline-block;
   margin-left:-4px;
@@ -370,10 +371,6 @@ span.fas.fa-chevron-right {
 
 
 .col-xs-6.col-sm-6.col-md-6.col-lg-6.rightcontact {padding-bottom:  45px;padding-left: 55px;border-left: #e0e0e0 solid 1px;}
-.col-md-6 img{
-  width:100%;
-  height: 500px;
-}
 
 .footer img {margin-top: -10px;width:  275px;height: 44px;float:  right;}
 body .carousel-indicators li{
